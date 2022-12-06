@@ -6,7 +6,7 @@
 
 MOTOR::MOTOR(const uint8_t &speedpin, const uint8_t &directpin, const uint8_t &signalpin, const uint8_t &ch1pin, const uint8_t &ch2pin) :_speedpin (speedpin), _directpin (directpin), _signalpin (signalpin), _ch1pin (ch1pin), _ch2pin (ch2pin)
 {
-
+  _ch2Data = 0x00;
 }
 
 void MOTOR::init()
@@ -73,16 +73,17 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
     digitalWrite(_signalpin, 1);
     digitalWrite(_directpin, dir);
     analogWrite(_speedpin, START);
-    lastSpeed = (uint8_t) map(chData, 1350, 1800, START, 254);
+    lastSpeed = (uint8_t) map(chData, 1800, 1350, 0, 255);
+    lastSpeed = constrain(lastSpeed, START, 255);
     delayMicroseconds(200);
     for(; ch2Last <= chData; ch2Last += 10)
     {
-      lastSpeed = (uint8_t) map(chData, 1350, 1800, lastSpeed, 254);
-      analogWrite(_speedpin, map(ch2Last, 1800, 1350, lastSpeed, 254));
+      lastSpeed = (uint8_t) map(chData, 1800, 1350, lastSpeed, 254);
+      analogWrite(_speedpin, lastSpeed + START);
       delayMicroseconds(200);
     }
 
-    return ((uint8_t)map(ch2Last, 1350, 1800, START, 254));
+    return ((uint8_t)map(ch2Last, 1800, 1350, START, 254));
   }
 
   else if(chData >= UP && chData < ch2Last)
@@ -95,7 +96,7 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
     for(; ch2Last >= chData; ch2Last -= 10)
     {
       lastSpeed = (int8_t) map(chData, 1350, 1800, lastSpeed, 254);
-      analogWrite(_speedpin, map(ch2Last, 1800, 1350, lastSpeed, 254));
+      analogWrite(_speedpin, lastSpeed - START);
       delayMicroseconds(200);
     }
 
@@ -111,7 +112,7 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
       for(; ch2Last >= chData; ch2Last -= 10)
       {
         lastSpeed = (int8_t) map(chData, 1300, 890, lastSpeed, 254);
-        analogWrite(_speedpin, map(ch2Last, 1300, 890, lastSpeed, 254));
+        analogWrite(_speedpin, lastSpeed - START);
         delayMicroseconds(200);
       }
 
@@ -128,7 +129,7 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
       for(; ch2Last <= chData; ch2Last += 10)
       {
         lastSpeed = (int8_t) map(chData, 1300, 890, lastSpeed, 254);
-        analogWrite(_speedpin, map(ch2Last, 1300, 890, lastSpeed, 254));
+        analogWrite(_speedpin, lastSpeed + START);
         delayMicroseconds(200);
       }
 
@@ -137,6 +138,7 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
 
     else
     {
+      ch2Last = 0;
       stopMOTOR();
       delayMicroseconds(200);
       return (0x00);
