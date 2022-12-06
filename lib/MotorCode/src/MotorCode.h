@@ -2,10 +2,11 @@
 #define MOTORCODE
 #define UP 1350
 #define DOWN 1309
+#define START 160
 #include <stdint.h>
 #include <Arduino.h>
 
-enum direction_t { back = 0x00, front = 0xFF };
+enum direction_t { back = LOW, front = HIGH };
 
 class MOTOR
 {
@@ -28,6 +29,7 @@ class MOTOR
     uint8_t _ch1pin, _ch2pin;       //pin for channels 1 and 2
     int64_t _ch2Data, _ch1Data;      //Variables to store channel inputs
     int64_t ch2Last;                 //Stores last value of channel 2 data
+    int8_t lastSpeed;
 };
 
 

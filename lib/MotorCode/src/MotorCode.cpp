@@ -32,11 +32,14 @@ int64_t MOTOR::ch2Data()
 
 bool MOTOR::moveForward()
 {
-  if (_ch2Data >= 1350)
+  if (_ch2Data >= UP)
   {
     speedCal(_ch2Data, front);
     return 1;
   }
+
+  else
+    stopMOTOR();
   return 0;
 }
 
@@ -44,11 +47,14 @@ bool MOTOR::moveForward()
 bool MOTOR::moveBackward()
 {
 
-  if(_ch2Data <= 1309)
+  if(_ch2Data <= DOWN)
   {
   speedCal(_ch2Data, back);
   return 1;
   }
+
+  else
+    stopMOTOR();
   return 0;
 }
 
@@ -66,59 +72,67 @@ const uint8_t& MOTOR::speedCal(int64_t& chData, const direction_t& dir)
   {
     digitalWrite(_signalpin, 1);
     digitalWrite(_directpin, dir);
-    analogWrite(_speedpin, 155);
+    analogWrite(_speedpin, START);
+    lastSpeed = (uint8_t) map(chData, 1350, 1800, START, 254);
     delayMicroseconds(200);
     for(; ch2Last <= chData; ch2Last += 10)
     {
-      analogWrite(_speedpin, map(ch2Last, 1800, 1350, 155, 254));
+      lastSpeed = (uint8_t) map(chData, 1350, 1800, lastSpeed, 254);
+      analogWrite(_speedpin, map(ch2Last, 1800, 1350, lastSpeed, 254));
       delayMicroseconds(200);
     }
 
-    return ((uint8_t)map(ch2Last, 1350, 1800, 155, 254));
+    return ((uint8_t)map(ch2Last, 1350, 1800, START, 254));
   }
 
   else if(chData >= UP && chData < ch2Last)
   {
     digitalWrite(_signalpin, 1);
     digitalWrite(_directpin, dir);
-    analogWrite(_speedpin, 155);
+    analogWrite(_speedpin, START);
+    lastSpeed = (int8_t) map(chData, 1350, 1800, START, 254);
     delayMicroseconds(200);
-    for(; ch2Last <= chData; ch2Last -= 10)
+    for(; ch2Last >= chData; ch2Last -= 10)
     {
-      analogWrite(_speedpin, map(ch2Last, 1800, 1350, 155, 254));
+      lastSpeed = (int8_t) map(chData, 1350, 1800, lastSpeed, 254);
+      analogWrite(_speedpin, map(ch2Last, 1800, 1350, lastSpeed, 254));
       delayMicroseconds(200);
     }
 
-    return ((uint8_t)map(ch2Last, 1350, 1800, 155, 254));
+    return ((uint8_t)map(ch2Last, 1350, 1800, START, 254));
   }
     else if(chData <= DOWN && chData < ch2Last)
     {
       digitalWrite(_signalpin, 1);
       digitalWrite(_directpin, dir);
-      analogWrite(_speedpin, 155);
+      analogWrite(_speedpin, START);
+      lastSpeed = (int8_t) map(chData, 1300, 890, START, 254);
       delayMicroseconds(200);
       for(; ch2Last >= chData; ch2Last -= 10)
       {
-        analogWrite(_speedpin, map(ch2Last, 1300, 890, 155, 254));
+        lastSpeed = (int8_t) map(chData, 1300, 890, lastSpeed, 254);
+        analogWrite(_speedpin, map(ch2Last, 1300, 890, lastSpeed, 254));
         delayMicroseconds(200);
       }
 
-      return ((uint8_t)map(ch2Last, 1300, 890, 155, 254));
+      return ((uint8_t)map(ch2Last, 1300, 890, START, 254));
     }
 
     else if(chData <= DOWN && chData > ch2Last)
     {
       digitalWrite(_signalpin, 1);
       digitalWrite(_directpin, dir);
-      analogWrite(_speedpin, 155);
+      analogWrite(_speedpin, START);
+      lastSpeed = (int8_t) map(chData, 1300, 890, START, 254);
       delayMicroseconds(200);
-      for(; ch2Last >= chData; ch2Last += 10)
+      for(; ch2Last <= chData; ch2Last += 10)
       {
-        analogWrite(_speedpin, map(ch2Last, 1300, 890, 155, 254));
+        lastSpeed = (int8_t) map(chData, 1300, 890, lastSpeed, 254);
+        analogWrite(_speedpin, map(ch2Last, 1300, 890, lastSpeed, 254));
         delayMicroseconds(200);
       }
 
-      return ((uint8_t)map(ch2Last, 1300, 890, 155, 254));
+      return ((uint8_t)map(ch2Last, 1300, 890, START, 254));
     }
 
     else
