@@ -25,16 +25,11 @@ void setup()
 
 void loop()
 {
-    int16_t fastlife = Motor1.ch2Data()
-    ;
-    if(fastlife >= UP)
-    {
-        Motor1.moveForward();
-        Motor2.moveForward();
-    }
-    else if(fastlife <= DOWN)
-    {
-        Motor1.moveBackward();
-        Motor2.moveBackward();
-    }
+    Motor1.ch2Data();
+    Motor2.ch2Data();
+
+
+    Motor1.moveForward();
+    Motor2.moveBackward();
+    delayMicroseconds(200);
 }
