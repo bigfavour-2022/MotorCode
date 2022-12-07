@@ -25,17 +25,38 @@ void MOTOR::init()
 
 bool MOTOR::btn1chk()
 {
-    return ((btn1Last != pulseIn(btn1pin, HIGH, 25000)) ? true : false);
+    if(btn1Last != pulseIn(btn1pin, HIGH, 25000))
+    {
+      delay(100);
+      btn1Last = pulseIn(btn1pin, HIGH, 25000);
+      return true;
+    }
+
+    return false;
 }
 
 bool MOTOR::btn2chk()
 {
-    return ((btn2Last != pulseIn(btn2pin, HIGH, 25000)) ? true : false);
+    if(btn2Last != pulseIn(btn2pin, HIGH, 25000))
+    {
+      delay(100);
+      btn2Last = pulseIn(btn2pin, HIGH, 25000);
+      return true;
+    }
+
+    return false;
 }
 
 bool MOTOR::btn3chk()
 {
-  return ((btn3Last != pulseIn(btn3pin, HIGH, 25000)) ? true : false);
+  if(btn3Last != pulseIn(btn3pin, HIGH, 25000))
+    {
+      delay(100);
+      btn3Last = pulseIn(btn3pin, HIGH, 25000);
+      return true;
+    }
+
+    return false;
 }
 
 bool MOTOR::moveForward()
