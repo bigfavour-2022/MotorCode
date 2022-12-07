@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "MotorCode.h"
-#define ch1pin 13
-#define ch2pin 12
+#define button1 13
+#define button2 12
+#define button3 14
 #define motor1Dir 8
 #define motor1Sig 7
 #define motor1Spd 11
@@ -12,8 +13,8 @@
 void setup();
 void loop();
 
-MOTOR Motor1(motor1Spd,motor1Dir, motor1Sig, ch1pin, ch2pin);
-MOTOR Motor2(motor2Spd, motor2Dir,motor2Sig, ch1pin, ch2pin);
+MOTOR Motor1(motor1Spd,motor1Dir, motor1Sig, button1, button2, button3);
+MOTOR Motor2(motor2Spd, motor2Dir,motor2Sig, button1, button2, button3);
 
 void setup()
 {
@@ -25,11 +26,25 @@ void setup()
 
 void loop()
 {
-    Motor1.ch2Data();
-    Motor2.ch2Data();
+    if(Motor1.btn1chk())
+    {
+        Motor1.moveForward();
+        Motor2.moveForward();
+        delay(50);
+    }
 
+    else if(Motor1.btn2chk())
+    {
+        Motor1.moveForward();
+        Motor2.moveBackward();
+        delay(50);
+    }
 
-    Motor1.moveForward();
-    Motor2.moveBackward();
+    else if(Motor2.btn3chk())
+    {
+        Motor1.stopMOTOR();
+        Motor2.stopMOTOR();
+        delay(200);
+    }
     delayMicroseconds(200);
 }
