@@ -26,7 +26,7 @@ class MOTOR
     const uint8_t& speedCal(int64_t& ch2data, const direction_t& dir);
     uint8_t  _speedpin, _directpin, _signalpin;
     uint8_t btn1pin, btn2pin, btn3pin;       //pin for buttons
-    uint64_t btn1Last, btn2Last, btn3Last;
+    int64_t btn1Last, btn2Last, btn3Last;
 };
 
 

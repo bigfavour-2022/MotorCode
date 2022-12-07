@@ -3,6 +3,7 @@
 #define button1 13
 #define button2 12
 #define button3 14
+
 #define motor1Dir 8
 #define motor1Sig 7
 #define motor1Spd 11
