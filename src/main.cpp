@@ -1,8 +1,9 @@
 #include <Arduino.h>
 #include "MotorCode.h"
-#define button1 22
-#define button2 23
-#define button3  24
+#define button1 13
+#define button2 12
+#define button3 14
+
 #define motor1Dir 8
 #define motor1Sig 7
 #define motor1Spd 11
