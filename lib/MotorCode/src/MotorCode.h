@@ -1,8 +1,8 @@
 #ifndef MOTORCODE
 #define MOTORCODE
-#define UP 1350
-#define DOWN 1309
-#define START 160
+#define BTN1VAL 0
+#define BTN2VAL 0
+#define BTN3VAL 0
 #include <stdint.h>
 #include <Arduino.h>
 
@@ -12,7 +12,7 @@ class MOTOR
 {
     public:
     MOTOR() = default;
-    MOTOR(const uint8_t &speedpin, const uint8_t &directpin, const uint8_t &signalpin, const uint8_t &ch1pin, const uint8_t &ch2pin);
+    MOTOR(const uint8_t &speedpin, const uint8_t &directpin, const uint8_t &signalpin, const uint8_t &btn1, const uint8_t &btn2, const uint8_t &btn3);
 
     void init();                //To initialise motor
     bool moveForward();         //Move motor forward
@@ -20,16 +20,14 @@ class MOTOR
     void stopMOTOR();           //Stop motor
 
     // Methods for the remote control
-   int64_t ch1Data();           //Get channel1 data
-   int64_t ch2Data();           //Get channel2 data
-   int64_t _ch2Data, _ch1Data;      //Variables to store channel inputs
+   bool btn1chk();
+   bool btn2chk();
+   bool btn3chk();
 
     private:
     const uint8_t& speedCal(int64_t& ch2data, const direction_t& dir);
     uint8_t  _speedpin, _directpin, _signalpin;
-    uint8_t _ch1pin, _ch2pin;       //pin for channels 1 and 2
-    int64_t ch2Last;                 //Stores last value of channel 2 data
-    int8_t lastSpeed;
+    uint8_t btn1pin, btn2pin, btn3pin;       //pin for buttons
 };
 
 
