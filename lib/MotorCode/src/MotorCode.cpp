@@ -6,7 +6,11 @@
 
 MOTOR::MOTOR(const uint8_t &speedpin, const uint8_t &directpin, const uint8_t &signalpin, const uint8_t &btn1, const uint8_t &btn2, const uint8_t &btn3) :_speedpin (speedpin), _directpin (directpin), _signalpin (signalpin), btn1pin (btn1), btn2pin (btn2), btn3pin(btn3)
 {
-
+  btn1Last = pulseIn(btn1pin, HIGH, 25000);
+  delay(200);
+  btn2Last = pulseIn(btn2pin, HIGH, 25000);
+  delay(200);
+  btn3Last = pulseIn(btn3pin, HIGH, 25000);
 }
 
 void MOTOR::init()
@@ -21,17 +25,17 @@ void MOTOR::init()
 
 bool MOTOR::btn1chk()
 {
-    return ((pulseIn(btn1pin, HIGH, 25000) >= BTN1VAL) ? true : false);
+    return ((btn1Last != pulseIn(btn1pin, HIGH, 25000)) ? true : false);
 }
 
 bool MOTOR::btn2chk()
 {
-    return ((pulseIn(btn2pin, HIGH, 25000) >= BTN2VAL) ? true : false);
+    return ((btn2Last != pulseIn(btn2pin, HIGH, 25000)) ? true : false);
 }
 
 bool MOTOR::btn3chk()
 {
-  return ((pulseIn(btn3pin, HIGH, 25000) >= BTN3VAL) ? true : false);
+  return ((btn3Last != pulseIn(btn3pin, HIGH, 25000)) ? true : false);
 }
 
 bool MOTOR::moveForward()
