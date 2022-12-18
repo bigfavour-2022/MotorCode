@@ -24,7 +24,7 @@
 #define STOP      5
 
 
-uint8_t *speed { new uint8_t (190) };    //Stores the current value of the motor (*speed)
+uint8_t speed { 160 };    //Stores the current value of the motor speed
 
 uint8_t chPins [] {2, A0, 4, 5, 6, 7} /* Stores the connectors for the receiver */, start { };
 
@@ -55,10 +55,10 @@ void loop()
 
     while(remote.readButton(UP))
     {
-        delay(200);
-        motor1.move(forward, (*speed));
-        delay(200);
-        motor2.move(backward, (*speed));
+        delayMicroseconds(200);
+        motor1.move(forward, speed);
+        delayMicroseconds(200);
+        motor2.move(backward, speed);
 
 
         if(remote.readButton(STOP) || remote.readButton(DOWN))
@@ -67,10 +67,10 @@ void loop()
 
     while(remote.readButton(DOWN))
     {
-        delay(200);
-        motor1.move(backward, (*speed));
-        delay(200);
-        motor2.move(forward, (*speed));
+        delayMicroseconds(200);
+        motor1.move(backward, speed);
+        delayMicroseconds(200);
+        motor2.move(forward, speed);
 
         if(remote.readButton(STOP) || remote.readButton(UP))
           break;
@@ -79,14 +79,13 @@ void loop()
     while(remote.readButton(STOP))
     {
         motor1.stop();
-        delay(100);
+        delayMicroseconds(100);
         motor2.stop();
-        delay(100);
-        (*speed) = 145;
+        delayMicroseconds(100);
 
         if(remote.readButton(UP) || remote.readButton(DOWN))
           break;
     }
 
-    delay(200);
+    delayMicroseconds(200);
 }
