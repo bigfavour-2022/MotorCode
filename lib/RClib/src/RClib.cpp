@@ -35,8 +35,7 @@ RC::~RC()
   btnlast = nullptr;
 }
 
-long RC::readJoystick(const uint8_t &ch, const axis_t &axis)
-{
+long& RC::readJoystick(const uint8_t &ch, const axis_t &axis) {
   using namespace RClib;
   static long temp;
   temp = pulseIn(chPins[ch-1], HIGH, 25000);
@@ -50,13 +49,13 @@ long RC::readJoystick(const uint8_t &ch, const axis_t &axis)
   }
   else
   {
-    temp = (RClib::mapY<RC>(temp, this, 255, -256));
+    temp = (RClib::mapY<RC>(temp, this, -256, -255));
 
     return (temp);
   }
 }
 
-bool RC::readButton(const uint8_t &ch)
+bool& RC::readButton(const uint8_t &ch)
 {
   static bool temp;
   btncurrent[ch - 3] = btnMap(pulseIn(chPins[ch-1], HIGH, 25000));

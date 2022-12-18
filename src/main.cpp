@@ -14,17 +14,19 @@
 #define motor1Dir 8   //White
 #define motor1Sig 9   //Red
 #define motor1Spd 10  //Yellow
+
 #define motor2Dir 12
 #define motor2Sig 13
 #define motor2Spd 11
+
 #define UP        3
 #define DOWN      4
 #define STOP      5
 
 
-uint8_t speed { 145 };    //Stores the current value of the motor speed
+uint8_t *speed { new uint8_t (190) };    //Stores the current value of the motor (*speed)
 
-uint8_t chPins [] {2, 3, 4, 5, 6, 7} /* Stores the connectors for the receiver */, start { };
+uint8_t chPins [] {2, A0, 4, 5, 6, 7} /* Stores the connectors for the receiver */, start { };
 
 RC remote (6, chPins);
 
@@ -50,18 +52,13 @@ void loop()
       start++;
     }
 
+
     while(remote.readButton(UP))
     {
-        if((remote.readJoystick(2, Y) == 255) && (speed != 255 ))
-          ++speed;
-        else if((remote.readJoystick(2, Y) == -255) && (speed != 150))
-          --speed;
-
-
         delay(200);
-        motor1.move(forward, speed);
+        motor1.move(forward, (*speed));
         delay(200);
-        motor2.move(forward, speed);
+        motor2.move(backward, (*speed));
 
 
         if(remote.readButton(STOP) || remote.readButton(DOWN))
@@ -70,15 +67,10 @@ void loop()
 
     while(remote.readButton(DOWN))
     {
-      if((remote.readJoystick(2, Y) == 255) && (speed != 255 ))
-          ++speed;
-      else if((remote.readJoystick(2, Y) == -255) && (speed != 150))
-          --speed;
-
         delay(200);
-        motor1.move(backward, speed);
+        motor1.move(backward, (*speed));
         delay(200);
-        motor2.move(backward, speed);
+        motor2.move(forward, (*speed));
 
         if(remote.readButton(STOP) || remote.readButton(UP))
           break;
@@ -90,6 +82,7 @@ void loop()
         delay(100);
         motor2.stop();
         delay(100);
+        (*speed) = 145;
 
         if(remote.readButton(UP) || remote.readButton(DOWN))
           break;
