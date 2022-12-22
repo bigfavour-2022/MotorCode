@@ -16,7 +16,7 @@
 #define motor1Spd 10  //Yellow
 
 #define motor2Dir 12
-#define motor2Sig 13
+#define motor2Sig A0
 #define motor2Spd 11
 
 #define UP        3
@@ -24,7 +24,7 @@
 #define STOP      5
 
 
-uint8_t speed { 160 };    //Stores the current value of the motor speed
+uint8_t speed { 150 };    //Stores the current value of the motor speed
 
 uint8_t chPins [] {2, A0, 4, 5, 6, 7} /* Stores the connectors for the receiver */, start { };
 
