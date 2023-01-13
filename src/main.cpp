@@ -1,51 +1,91 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//*FILE NAME:       main.cpp
+//*FILE DESC:       Source file for MotorCode.
+//*FILE VERSION:    0.1.3 rev 1
+//*FILE AUTHOR:     Chimaroke Okwara
+//*LAST MODIFIED:   Thursday, 8 December, 2022 16:11
+//*LICENSE:         Academic Free License
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <Arduino.h>
-#include "MotorCode.h"
-#define button1 22
-#define button2 23
-#define button3 24
+#include <hoverboard.h>
+#include <RClib.h>
 
-#define motor1Dir 8
-#define motor1Sig 7
-#define motor1Spd 11
-#define motor2Dir 4
-#define motor2Sig 2
-#define motor2Spd 10
+//Motor driver connections to Arduino:
+#define motor1Dir 8   //White
+#define motor1Sig 9   //Red
+#define motor1Spd 10  //Yellow
+
+#define motor2Dir 12
+#define motor2Sig A0
+#define motor2Spd 11
+
+#define UP        3
+#define DOWN      4
+#define STOP      5
+
+
+uint8_t speed { 150 };    //Stores the current value of the motor speed
+
+uint8_t chPins [] {2, A0, 4, 5, 6, 7} /* Stores the connectors for the receiver */, start { };
+
+RC remote (6, chPins);
+
+HMotor motor1(motor1Sig, motor1Spd, motor1Dir);
+HMotor motor2(motor2Sig, motor2Spd, motor2Dir);
 
 void setup();
 void loop();
 
-MOTOR Motor1(motor1Spd,motor1Dir, motor1Sig, button1, button2, button3);
-MOTOR Motor2(motor2Spd, motor2Dir,motor2Sig, button1, button2, button3);
 
 void setup()
 {
-    Motor1.init();
-    Motor2.init();
-    Motor1.stopMOTOR();
-    Motor2.stopMOTOR();
+    motor1.stop();
+    motor2.stop();
 }
 
 void loop()
 {
-    if(Motor1.btn1chk())
+    if(!start)        //Ensures that the motor starts stopped
     {
-        Motor1.moveForward();
-        Motor2.moveForward();
-        delay(50);
+      motor1.stop();
+      motor2.stop();
+      start++;
     }
 
-    else if(Motor1.btn2chk())
+
+    while(remote.readButton(UP))
     {
-        Motor1.moveForward();
-        Motor2.moveBackward();
-        delay(50);
+        delayMicroseconds(200);
+        motor1.move(forward, speed);
+        delayMicroseconds(200);
+        motor2.move(backward, speed);
+
+
+        if(remote.readButton(STOP) || remote.readButton(DOWN))
+          break;
     }
 
-    else if(Motor2.btn3chk())
+    while(remote.readButton(DOWN))
     {
-        Motor1.stopMOTOR();
-        Motor2.stopMOTOR();
-        delay(200);
+        delayMicroseconds(200);
+        motor1.move(backward, speed);
+        delayMicroseconds(200);
+        motor2.move(forward, speed);
+
+        if(remote.readButton(STOP) || remote.readButton(UP))
+          break;
     }
+
+    while(remote.readButton(STOP))
+    {
+        motor1.stop();
+        delayMicroseconds(100);
+        motor2.stop();
+        delayMicroseconds(100);
+
+        if(remote.readButton(UP) || remote.readButton(DOWN))
+          break;
+    }
+
     delayMicroseconds(200);
 }
